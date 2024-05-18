@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define tags for each window index
-tags=("󰿫 " "󰎦 " "󰎩 " "󰎬 " "󰎮 " "󰎰 " "󰎵 " "󰎸 " "󰎻 " "󰎾 ")
+tags=("󰎦 " "󰎩 " "󰎬 " "󰎮 " "󰎰 " "󰎵 " "󰎸 " "󰎻 " "󰎾 " "󰿫 ")
 
 # Set characters for each window number
 # set -g window_tag_1 "󰎦 " # 󰎥  󰼏
