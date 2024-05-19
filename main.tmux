@@ -1,9 +1,9 @@
 # Ensure the script is executable
-run-shell "chmod +x ~/.config/tmux/plugins/tmux-windtag/scripts/window-tag.sh"
+# run-shell "chmod +x ~/.config/tmux/plugins/tmux-windtags/scripts/window-tag.sh"
 
 # Function to get window tag
 get_window_tag() {
-  ~/.config/tmux/plugins/tmux-windtag/scripts/window-tag.sh
+  ~/.config/tmux/plugins/tmux-windtags/scripts/window-tag.sh
 }
 
 # Set window status format using the get_window_tag function
