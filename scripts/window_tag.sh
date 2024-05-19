@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -euo pipefail
+#set -euo pipefail
 
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Define an array of special characters corresponding to window numbers 0 to 9 for non-active windows
 #
@@ -17,20 +17,25 @@ active_chars=("󰼎 " "󰼏 " "󰼐 " "󰼑 " "󰼒 " "󰼓 " "󰼔 " "󰼕 " "�
 #  "󰎥 " "󰎨 " "󰎫 " "󰎲 " "󰎯 " "󰎴 " "󰎷 " "󰎺 " "󰎽 " "󰎢 "
 #  "󰼏 " "󰼐 " "󰼑 " "󰼒 " "󰼓 " "󰼔 " "󰼕 " "󰼖 " "󰼗 " "󰼎 "
 
-# Get the current window number and the active window number in tmux
+# Get the current window number
 current_window_number=$(tmux display-message -p '#I')
-active_window_number=$(tmux display-message -p '#W')
 
-# Get the window number corresponding to the current window ID
-current_window_number=$(tmux list-windows -F "#{window_id}:#{window_index}" | grep "$current_window_id" | cut -d':' -f2)
+# Get the active window number using tmux list-windows command and parsing
+active_window_number=$(tmux list-windows | grep '(active)' | awk '{print $1}' | tr -d ':')
 
-# Get the window number corresponding to the active window ID
-active_window_number=$(tmux list-windows -F "#{window_id}:#{window_index}" | grep "$active_window_id" | cut -d':' -f2)
+# Debug output
+#echo "Current Window Number: $current_window_number"
+#echo "Active Window Number: $active_window_number"
 
-# If the current window is active, echo the active character, otherwise echo the normal character
-if [ "$current_window_number" -eq "$active_window_number" ]; then
-  echo ${active_chars[$current_window_number]}
+# Ensure both are integers before comparison
+if [ "$current_window_number" -eq "$current_window_number" ] 2>/dev/null && [ "$active_window_number" -eq "$active_window_number" ] 2>/dev/null; then
+  # If the current window is active, set the active character, otherwise set the normal character
+  if [ "$current_window_number" -eq "$active_window_number" ]; then
+    window_tag="${active_chars[$current_window_number]}"
+  else
+    window_tag="${normal_chars[$current_window_number]}"
+  fi
+#  echo "$window_tag"  # This line is to output the variable for use in tmux.conf
 else
-  echo ${normal_chars[$current_window_number]}
+  echo "  "
 fi
-
