@@ -5,3 +5,7 @@ run-shell "tmux set -g @windtag '#($HOME/.config/tmux/plugins/tmux-windtags/scri
 
 # Define the format for the window status (This will be in your tmux.conf)
 # Note: No need to define window-status-format here, you can set it in your tmux.conf
+
+get_window_tag() {
+    ~/.config/tmux/plugins/tmux-windtag/scripts/window-tag.sh
+}
