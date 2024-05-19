@@ -1,16 +1,7 @@
-# Define the path to the script
-set -g @special_char_script '~/.tmux/plugins/tmux-special-window-tags/get_special_character.sh'
+# Tmux plugin to replace window numbers with special characters
 
-# Function to get the special character for a window
-get_special_char() {
-  local window_number=$1
-  # Use the script to get the special character
-  local special_char=$($(@special_char_script) $window_number)
-  echo $special_char
-}
+# Define a tmux variable to store the current window character
+run-shell "tmux set -g @windtag '#($HOME/.config/tmux/plugins/tmux-windtags/scripts/window_tag.sh)'"
 
-# Set the window status format
-set -g status-left ''
-set -g status-right ''
-set -g window-status-format "#(get_special_char #{window_index}) #W#{?#{window_flags},#{window_flags}, }"
-set -g window-status-current-format "#(get_special_char #{window_index}) #W#{?#{window_flags},#{window_flags}, }"
+# Define the format for the window status (This will be in your tmux.conf)
+# Note: No need to define window-status-format here, you can set it in your tmux.conf
