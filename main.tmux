@@ -1,14 +1,60 @@
-# Ensure the script is executable
-# run-shell "chmod +x ~/.config/tmux/plugins/tmux-windtags/scripts/window-tag.sh"
+#!/usr/bin/env bash
+# shellcheck disable=SC2155
+interpolation=(
+	"#S"
+	"#I"
+)
 
-# Function to get window tag
-get_window_tag() {
-  ~/.config/tmux/plugins/tmux-windtags/scripts/window-tag.sh
+digits=(󰎢 󰎥 󰎨 󰎫 󰎲 󰎯 󰎴 󰎷 󰎺 󰎽 )
+
+get_command() {
+	for i in {0..9}; do
+		echo -n "#{?#{==:#$1,$i},${digits[i]},}"
+	done
 }
 
-# Set window status format using the get_window_tag function
-set -g @window_tag_format '#{window_tag}'
+commands=(
+	"$(get_command S)"
+	"$(get_command I)"
+)
 
-# Example of how to use the variable in tmux.conf
-# You can replace #I with #{@window_tag_format} in your tmux status configuration
-EOF
+get_tmux_option() {
+	local option=$1
+	local default_value=$2
+	local option_value=$(tmux show-option -gqv "$option")
+	if [ -z "$option_value" ]; then
+		echo "$default_value"
+	else
+		echo "$option_value"
+	fi
+}
+
+set_tmux_option() {
+	local option="$1"
+	local value="$2"
+	tmux set-option -gq "$option" "$value"
+}
+
+do_interpolation() {
+	local all_interpolated="$1"
+	for ((i = 0; i < ${#commands[@]}; i++)); do
+		all_interpolated=${all_interpolated//${interpolation[$i]}/${commands[$i]}}
+	done
+	echo "$all_interpolated"
+}
+
+update_tmux_option() {
+	local option="$1"
+	local option_value="$(get_tmux_option "$option")"
+	local new_option_value="$(do_interpolation "$option_value")"
+	set_tmux_option "$option" "$new_option_value"
+}
+
+main() {
+	update_tmux_option set-titles-string
+	update_tmux_option status-left
+	update_tmux_option status-right
+	update_tmux_option window-status-current-format
+	update_tmux_option window-status-format
+}
+main
